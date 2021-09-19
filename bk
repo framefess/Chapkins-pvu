@@ -1,0 +1,43 @@
+
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "/images/get_started16.png",
+            "32": "/images/get_started32.png",
+            "48": "/images/get_started48.png",
+            "128": "/images/get_started128.png"
+        }
+    },
+
+    // "background": {
+    //     "service_worker": "background.js"
+    // },
+
+       "background": {
+        "service_worker": [
+            "content_scripts/jquery-3.6.0.min.js",
+            "background.js"
+        ]
+    },
+
+    "options_page": "options.html",
+
+    // "include_globs": ["*://*/*/combat"],
+
+
+    // let btnsimulation = `
+// <li class="nav-item m-1" style="color:#b3b0a7">
+// <button type="button" class="btn btn btn-primary btn-sm btn-secondary" id="bs"> Battle Simulation </button>
+// <span> BonusPower ${inputbp}</span>
+// </li>`;
+// let donate = `
+// <li class="nav-item m-1" style="color:#b3b0a7;list-style: none;">
+// <small>
+// <span>เติมพลังน้ำชาให้เราสักนิด <button type="button" class="btn btn btn-primary btn-sm btn-secondary" onclick="window.open('https://discord.io/BoxchainGamer', '_blank'); return false;" > Donate </button></span>
+// </small></li>`;
+// let btnLvCalculation = `
+// <li class="nav-item m-1" style="color:#b3b0a7;list-style: none;">
+// <button type="button" class="btn btn btn-primary btn-sm btn-secondary" id="btnLV"> LV Calculation </button>
+
+// <span><b>Next MileStone: </b><span id="nextMileStone"></span></span>
+// </li>`;

@@ -1,0 +1,13 @@
+{
+    "cloudy": {
+        "metal":0,
+        "dark":0,
+        "light":-0.1,
+        "water":0,
+        "ice":0,
+        "wind":-0.5,
+        "electro":0,
+        "fire":0,
+        "parasite":0
+    }
+}
