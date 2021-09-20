@@ -15,23 +15,23 @@ let chapkins = `<div id="chapkins" class="">
 </div>
 </div>`;
 
-
+let risk = 0.2;
+let c = 0;
+let season;
+let weather;
+let weatheryesterday;
+chrome.storage.local.get(["risk"], (result) => {
+    // console.log(result);
+    if (result != undefined) {
+        risk = result.risk/100;
+    }
+});
 // fetch(url)
 //     .then((response) => response.json()) //assuming file contains json
 //     .then((json) => console.log("🚀 ~ file: pvu market.js ~ line 67 ~ n1 ~ json", json));
 
-async function fwc() {
-    const useason = chrome.runtime.getURL('storage/season.json');
-    const season = await (await fetch(useason)).json();
-    console.log("🚀 ~ file: pvu market.js ~ line 26 ~ fwc ~ season", season)
-    const uweather = chrome.runtime.getURL('storage/weather.json');
-    const weather = await (await fetch(uweather)).json();
-    console.log("🚀 ~ file: pvu market.js ~ line 29 ~ fwc ~ weather", weather)
-    let risk = 0.2;
-    let seasontoday = 'winter';
-    let yesterday = "snowy";
-    let today = "coldwave";
-    let tomorrow;
+
+async function greenhouse(seasontomorrow, weathertoday) {
     let plant = {
         "metal": { pos: 0, neg: 0, neu: 0, total: function () { return this.pos + this.neg + this.neu; }, posp: 0, negp: 0, neup: 0, greenhouse: false },
         "dark": { pos: 0, neg: 0, neu: 0, total: function () { return this.pos + this.neg + this.neu; }, posp: 0, negp: 0, neup: 0, greenhouse: false },
@@ -44,48 +44,105 @@ async function fwc() {
         "parasite": { pos: 0, neg: 0, neu: 0, total: function () { return this.pos + this.neg + this.neu; }, posp: 0, negp: 0, neup: 0, greenhouse: false }
     }
 
-    season[seasontoday].forEach(wweather => {
-        // console.log("🚀 ~ file: pvu market.js ~ line 48 ~ fwc ~ wweather", wweather)
-        // console.log(wweather,weather[wweather]);
-        // for (const iterator of object) {
-        // console.log("🚀 ~ file: pvu market.js ~ line 52 ~ fwc ~ iterator", iterator)
-        // }
-        if (wweather != yesterday && wweather != today) {
-            for (const key in weather[wweather]) {
-                if (Object.hasOwnProperty.call(weather[wweather], key)) {
-                    const value = weather[wweather][key];
-                    // console.log("🚀 ~ file: pvu market.js ~ line 54 ~ fwc ~ value", value)
-                    if (value == 0) {
-                        plant[key]["neu"]++;
-                    } else if (value > 0) {
-                        plant[key]["pos"]++;
-                    } else if (value < 0) {
-                        plant[key]["neg"]++;
-                    }
-                    plant[key].posp = plant[key].pos / plant[key].total();
-                    plant[key].negp = plant[key].neg / plant[key].total();
-                    plant[key].neup = plant[key].neu / plant[key].total();
-                    if (plant[key].negp >= plant[key].posp || plant[key].negp > risk) {
-                        plant[key].greenhouse = true;
-                    } else {
-                        plant[key].greenhouse = false;
+    seasontomorrow = 'winter';
+    weathertoday = "coldwave";
+
+    let weathertomorrow;
+    let d = new Date();
+    let dayofweek = d.getDay();
+    if (dayofweek == 6) {
+        if (seasontomorrow == "winter") {
+            seasontomorrow = "spring"
+        } else if (seasontomorrow == "spring") {
+            seasontomorrow = "summer"
+        } else if (seasontomorrow == "summer") {
+            seasontomorrow = "autumn"
+        } else if (seasontomorrow == "autumn") {
+            seasontomorrow = "winter"
+        }
+    }
+    if (c == 0) {
+        const useason = chrome.runtime.getURL('storage/season.json');
+        season = await (await fetch(useason)).json();
+        // console.log("🚀 ~ file: pvu market.js ~ line 26 ~ fwc ~ season", season)
+        const uweather = chrome.runtime.getURL('storage/weather.json');
+        weather = await (await fetch(uweather)).json();
+        // console.log("🚀 ~ file: pvu market.js ~ line 29 ~ fwc ~ weather", weather)
+        c++;
+
+        // chrome.storage.local.clear(function () {
+        //     var error = chrome.runtime.lastError;
+        //     if (error) {
+        //         console.error(error);
+        //     }
+        //     // do something more
+        // });
+        let storeweather = { weather: { yesterday: "", today: weathertoday } };
+        chrome.storage.local.get(['weather'], async function (result) {
+            // console.log('Value currently is ', result.weather);
+            if (result.weather == undefined) {
+                chrome.storage.local.set(storeweather, function () {
+                    console.log('UValue is set to ', storeweather);
+                });
+            } else if (result.weather.today != weathertoday) {
+                storeweather.weather.yesterday = result.weather.today;
+                storeweather.weather.today = weathertoday;
+                chrome.storage.local.set(storeweather, function () {
+                    weatheryesterday = storeweather.weather.yesterday;
+                    console.log('Value is set to ', storeweather);
+                });
+            } else {
+                weatheryesterday = result.weather.yesterday;
+
+            }
+        });
+
+    }
+
+
+    // chrome.storage.local.get(['weather'], function (result) {
+    //     console.log('weather currently is ', result.weather);
+    // });
+    if (typeof weatheryesterday != 'undefined') {
+        season[seasontomorrow].forEach(wweather => {
+            if (wweather != weatheryesterday && wweather != weathertoday) {
+                console.log(1, weatheryesterday, weathertoday);
+                for (const key in weather[wweather]) {
+                    if (Object.hasOwnProperty.call(weather[wweather], key)) {
+                        const value = weather[wweather][key];
+                        if (value == 0) {
+                            plant[key]["neu"]++;
+                        } else if (value > 0) {
+                            plant[key]["pos"]++;
+                        } else if (value < 0) {
+                            plant[key]["neg"]++;
+                        }
+                        plant[key].posp = plant[key].pos / plant[key].total();
+                        plant[key].negp = plant[key].neg / plant[key].total();
+                        plant[key].neup = plant[key].neu / plant[key].total();
+                        if ((plant[key].negp >= plant[key].posp || plant[key].negp > risk) && plant[key].negp != 0) {
+                            plant[key].greenhouse = true;
+                        } else {
+                            plant[key].greenhouse = false;
+                        }
                     }
                 }
             }
-        }
+        });
+    }
 
-    });
+    return plant;
+}
 
-
-
-    console.log("🚀 ~ file: pvu market.js ~ line 46 ~ fwc ~ plant", plant)
-
-    const n1 = setInterval(() => {
+async function fwc() {
+    const n1 = setInterval(async () => {
+        // console.log("risk", risk);
         // console.log("test");
         let n = 0;
         let urlpath = $(location).attr('href').split('/');
         // console.log("🚀 ~ file: pvu market.js ~ line 23 ~ n1 ~ urlpath", urlpath)
         if (urlpath[4] == "marketplace" || urlpath[4] == "") {
+            c = 0;
             $($.find("div.le.tw-text-center")).each((i, item) => {
                 // console.log(i, item);
                 let le0 = "";
@@ -114,8 +171,22 @@ async function fwc() {
                 n++;
             })
         } else if (urlpath[4] == "farm") {
+            let seasontoday = $($.find("span.season-text")[0]).text();
+            // console.log("🚀 ~ file: pvu market.js ~ line 112 ~ n1 ~ season", season)
+            let weathertoday = $($.find("div.weather-heat > div > p")[0]).text().replace(' ', "").replace(':', "").toLowerCase();
+            // console.log("🚀 ~ file: pvu market.js ~ line 112 ~ n1 ~ weather", weather)
+            if (seasontoday && weathertoday) {
+                let plant = await greenhouse(seasontoday, weathertoday);
+                console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant)
 
-
+                // let pbox = $.find("div.grid-item.tw-w-full.tw-rounded-md.tw-p-3.tw-relative.tw-flex.tw-flex-col.tw-gap-2")
+                let pbox = $.find("div.info")
+                console.log("🚀 ~ file: pvu market.js ~ line 183 ~ n1 ~ pbox", pbox)
+            }
+            // let plant = await greenhouse(seasontoday, weathertoday);
+            // console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant)
+        } else {
+            c = 0;
         }
 
         // console.log("🚀 ~ file: cryptoblades.js ~ line 22 ~ n1 ~ n", n)
@@ -153,9 +224,8 @@ $.when(
     // $("body > div > div.main-nav-div > div.body.main-font > nav").append(btnLvCalculation),
     // $("body > div > div.main-nav-div > div.body.main-font > nav").append(donate),
     // console.log($("body > div > div.main-nav-div > div.body.main-font > nav"))
-).done(() => {
+).done(async () => {
     console.log("running");
     fwc();
-
 });
 
