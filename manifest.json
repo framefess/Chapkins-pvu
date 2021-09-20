@@ -14,17 +14,26 @@
         "48": "/images/get_started48.png",
         "128": "/images/get_started128.png"
     },
-
     "content_scripts": [
         {
             "matches": [
                 "https://marketplace.plantvsundead.com/*"
             ],
-
             "run_at": "document_start",
             "js": [
                 "/content_scripts/jquery-3.6.0.min.js",
                 "/content_scripts/pvu market.js"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "storage/season.json",
+                "storage/weather.json"
+            ],
+            "matches": [
+                "https://marketplace.plantvsundead.com/*"
             ]
         }
     ]
