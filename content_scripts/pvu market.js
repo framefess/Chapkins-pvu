@@ -180,7 +180,7 @@ async function fwc() {
             // console.log("🚀 ~ file: pvu market.js ~ line 112 ~ n1 ~ weather", weather)
             if (seasontoday && weathertoday) {
                 let plant = await greenhouse(seasontoday, weathertoday);
-                console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant);
+
 
                 let pbox = $.find("div.grid-item");
                 $.each(pbox, function (key, value) {
@@ -188,7 +188,8 @@ async function fwc() {
                     let infotype = $(value).find("div.info > p").eq(0).text().replace(/[^a-zA-Z]+/g, '').toLowerCase();
 
                     if (infotype != 'undefinedundefined' && typeof infotype != 'undefined' && typeof plant != 'undefined') {
-                        console.log("🚀 ~ file: pvu market.js ~ line 188 ~ infotype", infotype)
+                        console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant);
+                        // console.log("🚀 ~ file: pvu market.js ~ line 188 ~ infotype", infotype)
                         if (plant[infotype].greenhouse == true) {
                             $(value).find("div.farm-info").css("background-color", "green");
                         }
