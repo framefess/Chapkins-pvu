@@ -1,5 +1,6 @@
 
 // Initialize
+document.getElementById("risk").value = 20;
 let irisk = document.getElementById("risk");
 
 irisk.oninput = function () {
@@ -18,6 +19,7 @@ chrome.storage.local.get(["risk"], (result) => {
         chrome.storage.local.set(risk, function () {
             console.log('Value is set to ', risk);
         });
+        document.getElementById("risk").value = 20;
         // chrome.storage.sync.set(risk);
     } else {
         console.log(result);

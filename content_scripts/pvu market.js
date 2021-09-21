@@ -1,3 +1,6 @@
+const season = { "spring": ["hurricanes", "volcano", "tsunami", "earthquake", "rainy", "sunny", "cloudy", "ironrain", "locustsswarm", "ratsswarm", "malaria"], "summer": ["heatwave", "hurricanes", "thunderstorm", "volcano", "tsunami", "earthquake", "tornado", "rainy", "sunny", "cloudy", "locustsswarm", "ratsswarm", "malaria", "coronalmassejection", "solarflares", "solarmaxima", "protonstorm"], "autumn": ["hurricanes", "thunderstorm", "volcano", "tsunami", "earthquake", "tornado", "flood", "winterstorm", "rainy", "sunny", "cloudy", "windy", "ironrain", "moonlight", "locustsswarm", "ratsswarm", "malaria"], "winter": ["volcano", "earthquake", "snowy", "coldwave", "winterstorm", "windy", "coronalmassejection", "solarflares", "solarmaxima", "magneticreconnection"] };
+
+const weather = { "cloudy": { "metal": 0, "dark": 0, "light": -0.1, "water": 0, "ice": 0, "wind": -0.5, "electro": 0, "fire": 0, "parasite": 0 }, "ironrain": { "metal": 1.2, "dark": 0, "light": 0, "water": 0.4, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 0 }, "coldwave": { "metal": 0, "dark": 0, "light": 0, "water": 0, "ice": 1.2, "wind": 0, "electro": 0, "fire": -0.6, "parasite": 0 }, "locustsswarm": { "metal": 0, "dark": 0, "light": 0, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 1 }, "coronalmassejection": { "metal": 0, "dark": 0, "light": 1, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0.4, "parasite": 0 }, "magneticreconnection": { "metal": 0.5, "dark": 0, "light": 0, "water": 0, "ice": 0, "wind": 0, "electro": 0.5, "fire": 0, "parasite": 0 }, "earthquake": { "metal": 1, "dark": 0, "light": 0, "water": 0, "ice": 0, "wind": 0.5, "electro": 0, "fire": 0, "parasite": 0 }, "malaria": { "metal": 0, "dark": 0, "light": 0, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 1 }, "flood": { "metal": -1, "dark": 0, "light": 0, "water": 1, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 0 }, "moonlight": { "metal": 0, "dark": 4, "light": 0, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 0 }, "heatwave": { "metal": 0, "dark": 0.1, "light": 0.2, "water": -0.3, "ice": -0.6, "wind": 0, "electro": 0, "fire": 1, "parasite": 0 }, "protonstorm": { "metal": 0, "dark": 0, "light": 2, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 0 }, "hurricanes": { "metal": 0, "dark": 0.4, "light": -0.2, "water": 0.5, "ice": 0.4, "wind": 0.5, "electro": 0.5, "fire": -0.4, "parasite": 0 }, "rainy": { "metal": -0.3, "dark": 0, "light": 0, "water": 1, "ice": 0, "wind": 0, "electro": 0, "fire": -0.3, "parasite": 0 }, "ratsswarm": { "metal": 0, "dark": 0, "light": 0, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0, "parasite": 1 }, "tornado": { "metal": 0, "dark": 0.5, "light": -0.4, "water": 0.2, "ice": 0, "wind": 1, "electro": 0.5, "fire": 0, "parasite": 0 }, "snowy": { "metal": 0, "dark": 0, "light": 0, "water": 0.6, "ice": 1, "wind": 0, "electro": 0, "fire": -0.4, "parasite": 0 }, "tsunami": { "metal": -0.6, "dark": 0.2, "light": -0.2, "water": 0.6, "ice": 0.3, "wind": 0, "electro": 0, "fire": -0.4, "parasite": 0 }, "solarflares": { "metal": 0, "dark": 0, "light": 0.8, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0.8, "parasite": 0 }, "volcano": { "metal": 0.4, "dark": 0, "light": 0, "water": -0.2, "ice": -0.4, "wind": 0, "electro": 0, "fire": 1, "parasite": 0 }, "solarmaxima": { "metal": 0, "dark": 0, "light": 1, "water": 0, "ice": 0, "wind": 0, "electro": 0, "fire": 0.4, "parasite": 0 }, "windy": { "metal": 0, "dark": 0, "light": 0.2, "water": 0, "ice": 0, "wind": 0.5, "electro": 0, "fire": 0, "parasite": 0 }, "sunny": { "metal": 0, "dark": 0, "light": 0, "water": -0.3, "ice": 0, "wind": 0, "electro": 0, "fire": 0.6, "parasite": 0 }, "winterstorm": { "metal": 0, "dark": 0, "light": -0.2, "water": 0, "ice": 0.6, "wind": 0.1, "electro": 0.5, "fire": -0.4, "parasite": 0 }, "thunderstorm": { "metal": -0.2, "dark": 1, "light": -0.2, "water": 0.1, "ice": 0, "wind": 0, "electro": 1, "fire": 0, "parasite": 0 } };
 
 let style = `<style>
 #chapkins {
@@ -17,13 +20,12 @@ let chapkins = `<div id="chapkins" class="">
 
 let risk = 0.2;
 let c = 0;
-let season;
-let weather;
+
 let weatheryesterday;
 chrome.storage.local.get(["risk"], (result) => {
     // console.log(result);
     if (result != undefined) {
-        risk = result.risk/100;
+        risk = result.risk / 100;
     }
 });
 // fetch(url)
@@ -44,8 +46,8 @@ async function greenhouse(seasontomorrow, weathertoday) {
         "parasite": { pos: 0, neg: 0, neu: 0, total: function () { return this.pos + this.neg + this.neu; }, posp: 0, negp: 0, neup: 0, greenhouse: false }
     }
 
-    seasontomorrow = 'winter';
-    weathertoday = "coldwave";
+    // seasontomorrow = 'winter';
+    // weathertoday = "coldwave";
 
     let weathertomorrow;
     let d = new Date();
@@ -62,11 +64,11 @@ async function greenhouse(seasontomorrow, weathertoday) {
         }
     }
     if (c == 0) {
-        const useason = chrome.runtime.getURL('storage/season.json');
-        season = await (await fetch(useason)).json();
+        // const useason = chrome.runtime.getURL('storage/season.json');
+        // season = await (await fetch(useason)).json();
         // console.log("🚀 ~ file: pvu market.js ~ line 26 ~ fwc ~ season", season)
-        const uweather = chrome.runtime.getURL('storage/weather.json');
-        weather = await (await fetch(uweather)).json();
+        // const uweather = chrome.runtime.getURL('storage/weather.json');
+        // weather = await (await fetch(uweather)).json();
         // console.log("🚀 ~ file: pvu market.js ~ line 29 ~ fwc ~ weather", weather)
         c++;
 
@@ -104,9 +106,9 @@ async function greenhouse(seasontomorrow, weathertoday) {
     //     console.log('weather currently is ', result.weather);
     // });
     if (typeof weatheryesterday != 'undefined') {
+        // console.log(1, weatheryesterday, weathertoday);
         season[seasontomorrow].forEach(wweather => {
             if (wweather != weatheryesterday && wweather != weathertoday) {
-                console.log(1, weatheryesterday, weathertoday);
                 for (const key in weather[wweather]) {
                     if (Object.hasOwnProperty.call(weather[wweather], key)) {
                         const value = weather[wweather][key];
@@ -129,9 +131,10 @@ async function greenhouse(seasontomorrow, weathertoday) {
                 }
             }
         });
+        return plant;
     }
 
-    return plant;
+
 }
 
 async function fwc() {
@@ -170,18 +173,34 @@ async function fwc() {
                 // }
                 n++;
             })
-        } else if (urlpath[4] == "farm") {
+        } else if (urlpath[4] == "farm" && urlpath[5] == "") {
             let seasontoday = $($.find("span.season-text")[0]).text();
             // console.log("🚀 ~ file: pvu market.js ~ line 112 ~ n1 ~ season", season)
             let weathertoday = $($.find("div.weather-heat > div > p")[0]).text().replace(' ', "").replace(':', "").toLowerCase();
             // console.log("🚀 ~ file: pvu market.js ~ line 112 ~ n1 ~ weather", weather)
             if (seasontoday && weathertoday) {
                 let plant = await greenhouse(seasontoday, weathertoday);
-                console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant)
+                console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant);
 
-                // let pbox = $.find("div.grid-item.tw-w-full.tw-rounded-md.tw-p-3.tw-relative.tw-flex.tw-flex-col.tw-gap-2")
-                let pbox = $.find("div.info")
-                console.log("🚀 ~ file: pvu market.js ~ line 183 ~ n1 ~ pbox", pbox)
+                let pbox = $.find("div.grid-item");
+                $.each(pbox, function (key, value) {
+                    // console.log(key, ": ", value);
+                    let infotype = $(value).find("div.info > p").eq(0).text().replace(/[^a-zA-Z]+/g, '').toLowerCase();
+
+                    if (infotype != 'undefinedundefined' && typeof infotype != 'undefined' && typeof plant != 'undefined') {
+                        console.log("🚀 ~ file: pvu market.js ~ line 188 ~ infotype", infotype)
+                        if (plant[infotype].greenhouse == true) {
+                            $(value).find("div.farm-info").css("background-color", "green");
+                        }
+                    }
+
+                });
+                // let pbox = $.find("div.info")
+                // console.log("🚀 ~ file: pvu market.js ~ line 183 ~ n1 ~ pbox", pbox)
+                // for (let index = 0; index < array.length; index++) {
+                //     const element = array[index];
+
+                // }
             }
             // let plant = await greenhouse(seasontoday, weathertoday);
             // console.log("🚀 ~ file: pvu market.js ~ line 110 ~ n1 ~ plant", plant)
