@@ -122,7 +122,7 @@ async function greenhouse(seasontomorrow, weathertoday) {
                         plant[key].posp = plant[key].pos / plant[key].total();
                         plant[key].negp = plant[key].neg / plant[key].total();
                         plant[key].neup = plant[key].neu / plant[key].total();
-                        if ((plant[key].negp >= plant[key].posp || plant[key].negp > risk) && plant[key].negp != 0) {
+                        if ((plant[key].negp > plant[key].posp || plant[key].negp > risk) && plant[key].negp != 0) {
                             plant[key].greenhouse = true;
                         } else {
                             plant[key].greenhouse = false;
@@ -150,12 +150,14 @@ async function fwc() {
                 // console.log(i, item);
                 let le0 = "";
                 let le1 = "";
+                let pvu = "";
                 if ($(item).text().split("/").length > 1) {
                     le0 = $(item).text().split("/")[0].replace(/\D/g, "");
                     // console.log("🚀 ~ file: cryptoblades.js ~ line 24 ~ $ ~ le0", le0)
                     le1 = $(item).text().split("/")[1].replace(/\D/g, "");
                     // console.log("🚀 ~ file: cryptoblades.js ~ line 26 ~ $ ~ le1", le1)
                     // $(item).text(Math.floor(le0 / le1));
+                    pvu = parseInt($($.find("p.tw-ml-2.text__green")[i]).text());
                     $(`#cle${i}`).remove();
                     let total = le0 / le1;
                     let pb = parseInt($($.find("p.tw-ml-2.text__green")[i]).text()) / (total * 24 * 0.95 / 150);
@@ -164,7 +166,8 @@ async function fwc() {
                 LE: <span style="color:#DFFF00;">${total.toFixed(2)}</span>/Hr, <br>
                 LE: <span style="color:#DFFF00;">${(total * 24).toFixed(2)}</span>/Day<br>
                 PVU: <span style="color:#DFFF00;">${(total * 24 * 0.95 / 150).toFixed(2)}</span>/Day<br>
-                Payback: <span style="color:#DFFF00;">${(pb).toFixed(2)}</span> Days </div>`);
+                Payback: <span style="color:#DFFF00;">${(pb).toFixed(2)}</span> Days</div>`);
+
                 }
                 // console.log($(item).prev("div"));
                 // if (le0 > 0 && le1 > 0) {
